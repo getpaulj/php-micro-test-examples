@@ -50,7 +50,7 @@ class LoginService
     public function login($loginName): Login
     {
         $user = $this->userRepo->get($loginName);
-        $login = $this->loginFactory->create(new User('d', 'b'));
+        $login = $this->loginFactory->create($user);
         return $this->loginRepo->save($login);
     }
 }

@@ -16,13 +16,13 @@ class MockTest extends TestCase {
     }
 
     public function testTryAndMockMethodThatDoesntExists() {
-        $mock = $this->createMock(HappyClass::class);
+        $mock = $this->createMock(HappyPerson::class);
         $mock->method('someMethodThatDoesntExist')->willReturn('foo');
     }
 
     public function testTryAndMockMethodThatDoesExists() {
         // Create a stub for the SomeClass class.
-        $stub = $this->createMock(HappyClass::class);
+        $stub = $this->createMock(HappyPerson::class);
 
         // Configure the stub.
         $stub->method('sayHello')->willReturn('foo');

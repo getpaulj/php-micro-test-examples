@@ -2,11 +2,6 @@
 
 use PHPUnit\Framework\TestCase;
 
-interface DateProvider {
-    function now():  DateTime;
-}
-
-
 class HappyPerson
 {
     private $name;
@@ -21,11 +16,10 @@ class HappyPerson
         $hello = sprintf("Hello %s", $name);
         $myNameIs = sprintf("my name is %s", $this->name);
 
-        $now = new DateTime();
+//        $now = new DateTime();
+//        $interestingFact = sprintf("did you know there has been precisely %s seconds since epoc", $now->getTimestamp());
 
-        $interestingFact = sprintf("did you know there has been precisely %s seconds since epoc", $now->getTimestamp());
-
-        return sprintf("%s %s %s", $hello, $myNameIs, $interestingFact);
+        return sprintf("%s %s" , $hello, $myNameIs);
     }
 }
 
@@ -42,5 +36,4 @@ class HappyPersonTest extends TestCase
 
         $this->assertEquals($expected, $actual);
     }
-
 }

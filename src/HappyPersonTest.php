@@ -2,13 +2,20 @@
 
 use PHPUnit\Framework\TestCase;
 
+
+interface DateTimeProvider{
+    function now(): DateTime;
+}
+
 class HappyPerson
 {
     private $name;
+    private $dateTimeProvider;
 
-    public function __construct(string $name)
+    public function __construct(string $name, DateTimeProvider $dateTimeProvider)
     {
         $this->name = $name;
+        $this->dateTimeProvider = $dateTimeProvider;
     }
 
     function sayHello($name)
@@ -16,10 +23,11 @@ class HappyPerson
         $hello = sprintf("Hello %s", $name);
         $myNameIs = sprintf("my name is %s", $this->name);
 
-//        $now = new DateTime();
-//        $interestingFact = sprintf("did you know there has been precisely %s seconds since epoc", $now->getTimestamp());
+        $now = $this->dateTimeProvider->now();
 
-        return sprintf("%s %s" , $hello, $myNameIs);
+        $interestingFact = sprintf("did you know there has been precisely %s seconds since epoc", $now->getTimestamp());
+
+        return sprintf("%s %s, %s" , $hello, $myNameIs, $interestingFact);
     }
 }
 
@@ -27,12 +35,19 @@ class HappyPersonTest extends TestCase
 {
     public function testSayHelloSupplyingNameTo() {
 
-        $myName = 'Paul';
-        $happyClass = new HappyPerson($myName);
+        $now = new DateTime();
 
+        $myName = 'Paul';
+        $dateTimeMock = $this->createMock(DateTimeProvider::class);
+        $happyClass = new HappyPerson($myName, $dateTimeMock);
+
+        $dateTimeMock->expects($this->once())->method('now')->willReturn($now);
         $someOneElse = 'someOneElse';
         $actual = $happyClass->sayHello($someOneElse);
-        $expected = 'Hello ' . $someOneElse . ' my name is ' . $myName;
+
+        $interestingFact = sprintf(", did you know there has been precisely %s seconds since epoc", $now->getTimestamp());
+
+        $expected = 'Hello ' . $someOneElse . ' my name is ' . $myName . $interestingFact;
 
         $this->assertEquals($expected, $actual);
     }

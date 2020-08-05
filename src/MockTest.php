@@ -5,13 +5,13 @@ use PHPUnit\Framework\TestCase;
 
 class HappyPerson {
     function sayHello($toName) {
-        throw new Exception('');
+        throw new Exception('Not implemented');
     }
 }
 
 class MockTest extends TestCase {
     public function testTryAndMockClassThatDoesntExist() {
-        $stub = $this->createMock(SomeClassThatDoesntExists::class);
+        $mock = $this->createMock(SomeClassThatDoesntExists::class);
     }
 
     public function testTryAndMockMethodThatDoesntExists() {
@@ -20,8 +20,10 @@ class MockTest extends TestCase {
     }
 
     public function testFailsIfNotCalled() {
-        $stub = $this->createMock(HappyPerson::class);
-        $stub->expects($this->once())->method('sayHello')->willReturn('foo');
+        $mock = $this->createMock(HappyPerson::class);
+
+        $mock->expects($this->atLeastOnce())->method('sayHello')->willReturn('foo');
+
         $this->assertEquals(true, true);
     }
 
@@ -34,10 +36,18 @@ class MockTest extends TestCase {
     }
 
     public function testCalledCorrectly() {
+
+        // given
         $sayHelloTo = 'Donald';
         $stub = $this->createMock(HappyPerson::class);
-        $stub->expects($this->atLeastOnce())->method('sayHello')->willReturn('foo');
-        $this->assertEquals('foo', $stub->sayHello($sayHelloTo));
+        $expected = 'foo';
+        $stub->expects($this->atLeastOnce())->method('sayHello')->willReturn($expected);
+
+        // when
+       $actual = $stub->sayHello($sayHelloTo);
+
+       // then
+        $this->assertEquals($expected, $actual);
     }
 
 
